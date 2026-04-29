@@ -1,1 +1,6 @@
-venv
+catboost_info/
+*.tsv
+events.out.tfevents*
+venv/
+__pycache__/
+.ipynb_checkpoints/
