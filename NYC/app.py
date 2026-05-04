@@ -26,13 +26,17 @@ def predict():
         pickup_daytype = int(data["pickup_daytype"])
         distance_km = float(data["distance_km"])
 
-        # validation
+        # ---------------- VALIDATION ----------------
         if passenger_count <= 0:
             return jsonify({"error": "Passenger count must be > 0"}), 400
+
+        if distance_km <= 0:
+            return jsonify({"error": "Distance must be positive"}), 400
 
         if vendor_id not in [1, 2]:
             return jsonify({"error": "Vendor ID must be 1 or 2"}), 400
 
+        # ---------------- FEATURE ORDER (VERY IMPORTANT) ----------------
         features = np.array([[
             vendor_id,
             passenger_count,

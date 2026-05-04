@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>NYC Trip Duration Predictor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -8,6 +9,7 @@
 <body>
 
 <div class="container">
+
     <h1>🚕 NYC Trip Duration Predictor</h1>
 
     <div class="card">
@@ -37,7 +39,7 @@
         <input type="number" id="pickup_daytype" min="0" max="1">
 
         <label>Distance (KM)</label>
-        <input type="number" id="distance_km" step="0.01">
+        <input type="number" id="distance_km" min="0.01" step="0.01">
 
         <button onclick="predictTrip()">Predict Duration</button>
 
@@ -56,6 +58,13 @@ function predictTrip() {
         return;
     }
 
+    let distance_km = parseFloat(document.getElementById("distance_km").value);
+
+    if (distance_km <= 0) {
+        document.getElementById("result").innerText = "Distance must be positive!";
+        return;
+    }
+
     let data = {
         vendor_id: document.getElementById("vendor_id").value,
         passenger_count: passenger_count,
@@ -64,7 +73,7 @@ function predictTrip() {
         pickup_hour: document.getElementById("pickup_hour").value,
         pickup_day: document.getElementById("pickup_day").value,
         pickup_daytype: document.getElementById("pickup_daytype").value,
-        distance_km: document.getElementById("distance_km").value
+        distance_km: distance_km
     };
 
     fetch("/predict", {
