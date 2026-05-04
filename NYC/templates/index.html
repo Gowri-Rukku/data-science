@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NYC Trip Duration Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🚕 NYC Trip Duration Predictor</h1>
+
+    <div class="card">
+
+        <label>Vendor ID</label>
+        <select id="vendor_id">
+            <option value="1">Vendor 1</option>
+            <option value="2">Vendor 2</option>
+        </select>
+
+        <label>Passenger Count</label>
+        <input type="number" id="passenger_count" min="1">
+
+        <label>Pickup Longitude</label>
+        <input type="number" id="pickup_longitude">
+
+        <label>Pickup Latitude</label>
+        <input type="number" id="pickup_latitude">
+
+        <label>Pickup Hour (0-23)</label>
+        <input type="number" id="pickup_hour" min="0" max="23">
+
+        <label>Pickup Day (0-6)</label>
+        <input type="number" id="pickup_day" min="0" max="6">
+
+        <label>Pickup Day Type (0=weekday, 1=weekend)</label>
+        <input type="number" id="pickup_daytype" min="0" max="1">
+
+        <label>Distance (KM)</label>
+        <input type="number" id="distance_km" step="0.01">
+
+        <button onclick="predictTrip()">Predict Duration</button>
+
+        <h2 id="result"></h2>
+
+    </div>
+</div>
+
+<script>
+function predictTrip() {
+
+    let passenger_count = parseInt(document.getElementById("passenger_count").value);
+
+    if (passenger_count <= 0) {
+        document.getElementById("result").innerText = "Passenger count must be positive!";
+        return;
+    }
+
+    let data = {
+        vendor_id: document.getElementById("vendor_id").value,
+        passenger_count: passenger_count,
+        pickup_longitude: document.getElementById("pickup_longitude").value,
+        pickup_latitude: document.getElementById("pickup_latitude").value,
+        pickup_hour: document.getElementById("pickup_hour").value,
+        pickup_day: document.getElementById("pickup_day").value,
+        pickup_daytype: document.getElementById("pickup_daytype").value,
+        distance_km: document.getElementById("distance_km").value
+    };
+
+    fetch("/predict", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.minutes !== undefined) {
+            document.getElementById("result").innerHTML =
+                "⏱ Trip Duration: " + data.minutes + " minutes";
+        } else {
+            document.getElementById("result").innerText = data.error;
+        }
+    });
+
+}
+</script>
+
+</body>
+</html>
