@@ -2,11 +2,18 @@ from flask import Flask, render_template, request, jsonify
 import joblib
 import numpy as np
 
-import os
-
+import os 
 app = Flask(__name__)
 
-model = joblib.load("xgb_model.joblib")
+import os
+import joblib
+
+
+model_path = os.path.join( os.path.dirname(__file__), "xgb_model.joblib")
+
+model = joblib.load(model_path)
+
+
 
 
 @app.route("/")
