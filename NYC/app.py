@@ -3,14 +3,13 @@ import joblib
 import numpy as np
 
 import os 
+
 app = Flask(__name__)
 
-import os
-import joblib
 
-
-model_path = os.path.join( os.path.dirname(__file__), "xgb_model.joblib")
-
+# Safe model loading
+BASE_DIR = os.path.dirname(__file__)
+model_path = os.path.join(BASE_DIR, "xgb_model.joblib")
 model = joblib.load(model_path)
 
 
